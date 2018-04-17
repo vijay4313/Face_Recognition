@@ -25,6 +25,25 @@ import check_resources as check
 import numpy as np
 
 
+def preprocess(img):
+    # check for dlib saved weights for face landmark detection
+    # if it fails, dowload and extract it manually from
+    # http://sourceforge.net/projects/dclib/files/dlib/v18.10/shape_predictor_68_face_landmarks.dat.bz2
+    check.check_dlib_landmark_weights()
+    # load detections performed by dlib library on 3D model and Reference Image
+    model3D = frontalize.ThreeD_Model(front_path + "/frontalization_models/model3Ddlib.mat", 'model_dlib')
+    
+    lmarks = feature_detection.get_landmarks(img)
+    
+    proj_matrix, camera_matrix, rmat, tvec = calib.estimate_camera(model3D, lmarks[0])
+    
+    eyemask = np.asarray(io.loadmat(front_path + '/frontalization_models/eyemask.mat')['eyemask'])
+    
+    frontal_raw, frontal_sym = frontalize.frontalize(img, proj_matrix, model3D.ref_U, eyemask)
+    
+    return frontal_sym
+
+
 def load_data():
     X = []
     Y = []
@@ -56,24 +75,6 @@ def create_subs(seed = 1):
     return (tr_data, cv_data, test_data)
 
 
-
-def preprocess(img):
-    # check for dlib saved weights for face landmark detection
-    # if it fails, dowload and extract it manually from
-    # http://sourceforge.net/projects/dclib/files/dlib/v18.10/shape_predictor_68_face_landmarks.dat.bz2
-    check.check_dlib_landmark_weights()
-    # load detections performed by dlib library on 3D model and Reference Image
-    model3D = frontalize.ThreeD_Model(front_path + "/frontalization_models/model3Ddlib.mat", 'model_dlib')
-    
-    lmarks = feature_detection.get_landmarks(img)
-    
-    proj_matrix, camera_matrix, rmat, tvec = calib.estimate_camera(model3D, lmarks[0])
-    
-    eyemask = np.asarray(io.loadmat(front_path + '/frontalization_models/eyemask.mat')['eyemask'])
-    
-    frontal_raw, frontal_sym = frontalize.frontalize(img, proj_matrix, model3D.ref_U, eyemask)
-    
-    return frontal_sym
 
 
 

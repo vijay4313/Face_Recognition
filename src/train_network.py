@@ -28,3 +28,9 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
 
 
+train_data, cv_data, test_data = create_subs()
+
+
+
+
+

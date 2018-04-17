@@ -50,7 +50,12 @@ def load_data():
     path = os.path.join(super_dir_path, 'data')
     for root, dirs, files in os.walk(path):
         for name in files:
-            if name.endswith(".jpg"):
+            
+            if (len(Y) > 10):
+                return (X, Y)
+                break
+            
+            elif name.endswith(".jpg"):
                 img = cv2.imread(os.path.join(root, name))
                 X.append(preprocess(img))
                 Y.append(root.split('/')[-1])

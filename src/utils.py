@@ -77,7 +77,7 @@ def create_subs(seed = 1):
     cv_data = ([X[i] for i in cv_samples], [Y_encoded[i] for i in cv_samples])
     test_data = ([X[i] for i in test_samples], [Y_encoded[i] for i in test_samples])
     
-    return (tr_data, cv_data, test_data)
+    return (tr_data, cv_data, test_data, Y_str2int)
 
 
 
